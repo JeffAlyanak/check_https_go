@@ -12,6 +12,7 @@ import (
 func main() {
 	// Handle cli arguments
 	host := flag.String("h", "", "Fully-qualified domain name to check.")
+	userAgent := flag.String("u", "check_https_go", "Custom user-agent string.")
 	verbose := flag.Bool("v", false, "More verbose output includes details of any redirects.")
 	redirects := flag.Int("r", 20, "Number of redirects to follow.")
 	certwarn := flag.Int("w", 10, "Number of days for which the TLS certificate must be valid before a warning state is returned.")
@@ -28,7 +29,7 @@ func main() {
 	h.URL = *host
 
 	// Perform status code check, exit with additional info if error
-	statuscodeResult := h.CheckStatus(*redirects)
+	statuscodeResult := h.CheckStatus(*redirects, *userAgent)
 	if statuscodeResult.Error != nil {
 		fmt.Println(statuscodeResult.ReturnCode)
 		if *verbose {

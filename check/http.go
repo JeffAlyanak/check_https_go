@@ -5,6 +5,7 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -17,7 +18,7 @@ type HTTPCheck struct {
 }
 
 // CheckStatus function runs a check of the HTTP status code and returns the result.
-func (h *HTTPCheck) CheckStatus(redirects int) Result {
+func (h *HTTPCheck) CheckStatus(redirects int, userAgent string) Result {
 	var resp *http.Response
 	var r Result
 	var url string = "https://" + h.URL
@@ -35,7 +36,7 @@ func (h *HTTPCheck) CheckStatus(redirects int) Result {
 	// Follow redirects up to redirect limit
 	for i := 0; i < redirects; i++ {
 		req, err := http.NewRequest("GET", url, nil)
-		req.Header.Set("User-Agent", "check_https_go")
+		req.Header.Set("User-Agent", userAgent)
 
 		resp, err = client.Do(req)
 		if err != nil {
@@ -97,11 +98,7 @@ func (h *HTTPCheck) CheckContent() Result {
 	// Verbose output includes the first five lines of the body
 	lines := strings.Split(string(body), "\n")
 
-	r.VerboseValue = "Beginning of body (first 5 lines):\n"
-	for i := 0; i < len(lines); i++ {
-		r.VerboseValue += "  " + lines[i] + "\n"
-	}
-	r.VerboseValue += "  …\n"
+	r.VerboseValue = "Returned " + strconv.Itoa(len(lines)) + " lines of content.\n"
 
 	return r
 }
