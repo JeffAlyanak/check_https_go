@@ -132,7 +132,7 @@ func (h *HTTPCheck) CheckCertificate(warn int, crit int) Result {
 		r.ReturnCode = 2
 		r.Value = "Cert critical"
 	} else if warndate.After(c.NotAfter) {
-		r.ReturnCode = 2
+		r.ReturnCode = 1
 		r.Value = "Cert warning"
 	} else {
 		r.ReturnCode = 0
