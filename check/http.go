@@ -96,8 +96,9 @@ func (h *HTTPCheck) CheckContent() Result {
 
 	// Verbose output includes the first five lines of the body
 	lines := strings.Split(string(body), "\n")
+
 	r.VerboseValue = "Beginning of body (first 5 lines):\n"
-	for i := 0; i < 5; i++ {
+	for i := 0; i < len(lines); i++ {
 		r.VerboseValue += "  " + lines[i] + "\n"
 	}
 	r.VerboseValue += "  …\n"
