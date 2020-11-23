@@ -5,11 +5,12 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
-	"git.computerassistance.co.uk/icinga-scripts/check_https_go/tlsmap"
+	"github.com/jeffalyanak/check_https_go/tlsmap"
 )
 
 // HTTPCheck value
@@ -45,8 +46,31 @@ func (h *HTTPCheck) CheckStatus(redirects int, userAgent string) Result {
 		}
 
 		if resp.StatusCode == 301 || resp.StatusCode == 302 {
-			r.VerboseValue += url + " redirected (" + resp.Status + ") to " + resp.Header.Get("Location") + "\n"
-			url = resp.Header.Get("Location")
+			l := resp.Header.Get("Location")
+			r.VerboseValue += url + " redirected (" + resp.Status + ") to " + l + "\n"
+
+			// If the location is relative to the domain
+			if !strings.HasPrefix(l, "http") {
+				// If the new location is relative to the old location, simply add it
+				// to the end of the previous location.
+				if !strings.HasPrefix(l, "/") {
+					l = url + "/" + l
+					// Otherwise—if the new location is relative to the webroot—extract the
+					// root from the old location and then add the new location to it.
+					// Error/break if unable to parse the URL from the old location.
+				} else {
+					re, _ := regexp.Compile("https?://[0-9a-z-.]+")
+					found := re.FindAllString(url, -1)
+
+					if len(found) > 0 {
+						l = found[0] + l
+					} else {
+						r.Error = errors.New("check http status: could not parse a valid URL")
+						break
+					}
+				}
+			}
+			url = l
 		} else {
 			break
 		}
