@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/jeffalyanak/check_https_go/check"
 )
@@ -25,8 +26,13 @@ func main() {
 		os.Exit(3)
 	}
 
+	// Primary var for the checks
 	var h check.HTTPCheck
 	h.URL = *host
+
+	// Create mew Performance Data struct and start the timer
+	var perfData check.PerfData
+	perfData.StartTimer(time.Now())
 
 	// Perform status code check, exit with additional info if error
 	statuscodeResult := h.CheckStatus(*redirects, *userAgent)
@@ -36,6 +42,7 @@ func main() {
 		if *verbose {
 			printVerboseInfo(statuscodeResult.VerboseValue)
 		}
+		fmt.Println(perfData.Get())
 		os.Exit(3)
 	}
 
@@ -46,6 +53,7 @@ func main() {
 		if *verbose {
 			printVerboseInfo(statuscodeResult.VerboseValue)
 		}
+		fmt.Println(perfData.Get())
 		os.Exit(statuscodeResult.ReturnCode)
 	}
 
@@ -58,6 +66,7 @@ func main() {
 			printVerboseInfo(statuscodeResult.VerboseValue +
 				contentResult.VerboseValue)
 		}
+		fmt.Println(perfData.Get())
 		os.Exit(3)
 	}
 
@@ -69,6 +78,7 @@ func main() {
 			printVerboseInfo(statuscodeResult.VerboseValue +
 				contentResult.VerboseValue)
 		}
+		fmt.Println(perfData.Get())
 		os.Exit(contentResult.ReturnCode)
 	}
 
@@ -82,6 +92,7 @@ func main() {
 				contentResult.VerboseValue +
 				certResult.VerboseValue)
 		}
+		fmt.Println(perfData.Get())
 		os.Exit(3)
 	}
 
@@ -94,6 +105,7 @@ func main() {
 				contentResult.VerboseValue +
 				certResult.VerboseValue)
 		}
+		fmt.Println(perfData.Get())
 		os.Exit(certResult.ReturnCode)
 	}
 
@@ -109,6 +121,8 @@ func main() {
 			contentResult.VerboseValue +
 			certResult.VerboseValue)
 	}
+
+	fmt.Println(perfData.Get())
 	os.Exit(0)
 }
 
