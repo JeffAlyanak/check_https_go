@@ -18,6 +18,7 @@ func main() {
 	redirects := flag.Int("r", 20, "Number of redirects to follow.")
 	certwarn := flag.Int("w", 10, "Number of days for which the TLS certificate must be valid before a warning state is returned.")
 	certcrit := flag.Int("c", 5, "Number of days for which the TLS certificate must be valid before a critical state is returned.")
+	timeoutduration := flag.Int("t", 30, "Timeout length in seconds, requests that do not finish before timeout are considered failed.")
 
 	flag.Parse()
 
@@ -35,7 +36,7 @@ func main() {
 	perfData.StartTimer(time.Now())
 
 	// Perform status code check, exit with additional info if error
-	statuscodeResult := h.CheckStatus(*redirects, *userAgent)
+	statuscodeResult := h.CheckStatus(*redirects, *userAgent, *timeoutduration)
 	if statuscodeResult.Error != nil {
 		printIntro("Status Code Error", h.URL)
 		fmt.Println(statuscodeResult.Error)

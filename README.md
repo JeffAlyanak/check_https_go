@@ -40,6 +40,8 @@ usage:
         Number of days for which the TLS certificate must be valid before a warning state is returned. (default 10)
     -c int
         Number of days for which the TLS certificate must be valid before a critical state is returned. (default 5)
+    -t
+        Timeout length in seconds, requests that do not finish before timeout are considered failed. (default 30)
 ```
 
 ## License

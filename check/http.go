@@ -50,7 +50,7 @@ func (p *PerfData) Get() string {
 }
 
 // CheckStatus function runs a check of the HTTP status code and returns the result.
-func (h *HTTPCheck) CheckStatus(redirects int, userAgent string) Result {
+func (h *HTTPCheck) CheckStatus(redirects int, userAgent string, timeoutduration int) Result {
 	var resp *http.Response
 	var r Result
 	var url string = "https://" + h.URL
@@ -59,6 +59,7 @@ func (h *HTTPCheck) CheckStatus(redirects int, userAgent string) Result {
 	tr := &http.Transport{}
 	client := &http.Client{
 		Transport: tr,
+		Timeout:   time.Duration(timeoutduration) * time.Second,
 		CheckRedirect: func(req *http.Request, via []*http.Request) error {
 			return http.ErrUseLastResponse
 
