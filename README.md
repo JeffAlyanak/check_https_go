@@ -42,6 +42,12 @@ usage:
         Number of days for which the TLS certificate must be valid before a critical state is returned. (default 5)
     -t
         Timeout length in seconds, requests that do not finish before timeout are considered failed. (default 30)
+    -v
+        Verbose output
+    -r int
+        Number of redirects to follow (will follow 301s, 302s, & 307s).
+    -u string (default=check_https_go)
+        Custom user-agent string.
 ```
 
 ## License
