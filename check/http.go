@@ -77,7 +77,7 @@ func (h *HTTPCheck) CheckStatus(redirects int, userAgent string, timeoutduration
 			return r
 		}
 
-		if resp.StatusCode == 301 || resp.StatusCode == 302 {
+		if resp.StatusCode == 301 || resp.StatusCode == 302 || resp.StatusCode == 307 {
 			l := resp.Header.Get("Location")
 			r.VerboseValue += url + " redirected (" + resp.Status + ") to " + l + "\n"
 
