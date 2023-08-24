@@ -14,7 +14,7 @@ The pre-compiled binaries available on the [releases page](https://github.com/je
 
 If you wish to compile it yourself, you'll need to install `go` and `make`. It's been tested on:
 
-* Golang 1.14.1
+* Golang 1.20.3
 * GNU Make 4.2.1
 
 It'll probably build just fine on many other versions. To build, simply run `make`:
@@ -49,6 +49,10 @@ usage:
     -u string (default=check_https_go)
         Custom user-agent string.
 ```
+
+## Version history
+1.2—Follow Redirect feature now handles 307s
+1.1—Added configurable timeout. Default remains at 30, but you can now increase or decrease this.
 
 ## License
 
