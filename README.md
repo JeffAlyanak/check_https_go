@@ -45,7 +45,7 @@ usage:
     -v
         Verbose output
     -r int
-        Number of redirects to follow.
+        Number of redirects to follow (will follow 301s, 302s, & 307s).
     -u string (default=check_https_go)
         Custom user-agent string.
 ```
