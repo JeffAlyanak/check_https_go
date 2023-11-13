@@ -123,7 +123,7 @@ func (h *HTTPCheck) CheckStatus(redirects int, userAgent string, timeoutduration
 }
 
 // CheckContent function runs a check of returned body content and returns the result.
-func (h *HTTPCheck) CheckContent() Result {
+func (h *HTTPCheck) CheckContent(checkString string) Result {
 	var r Result
 
 	resp, err := http.Get("https://" + h.URL)
@@ -139,9 +139,9 @@ func (h *HTTPCheck) CheckContent() Result {
 	}
 
 	if string(body) != "" {
-		if strings.ContainsAny(string(body), "<!DOCTYPE HTML>") {
+		if strings.ContainsAny(string(body), checkString) {
 			r.ReturnCode = 0
-			r.Value = "HTML content returned"
+			r.Value = "Expected content returned: " + checkString
 		} else {
 			r.ReturnCode = 3
 			r.Value = "Unknown content returned"

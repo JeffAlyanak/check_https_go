@@ -36,18 +36,19 @@ usage:
     -h string
         Fully-qualified domain name to check.
   optional
-    -w int
-        Number of days for which the TLS certificate must be valid before a warning state is returned. (default 10)
     -c int
-        Number of days for which the TLS certificate must be valid before a critical state is returned. (default 5)
-    -t
-        Timeout length in seconds, requests that do not finish before timeout are considered failed. (default 30)
-    -v
-        Verbose output
+            Number of days for which the TLS certificate must be valid before a critical state is returned. (default 5)
     -r int
-        Number of redirects to follow (will follow 301s, 302s, & 307s).
-    -u string (default=check_https_go)
-        Custom user-agent string.
+            Number of redirects to follow. (default 20)
+    -s string
+            Custom string to check for in the response body. (default "<!DOCTYPE HTML>")
+    -t int
+            Timeout length in seconds, requests that do not finish before timeout are considered failed. (default 30)
+    -u string
+            Custom user-agent string. (default "check_https_go")
+    -v    More verbose output includes details of any redirects.
+    -w int
+            Number of days for which the TLS certificate must be valid before a warning state is returned. (default 10)
 ```
 
 ## Version history

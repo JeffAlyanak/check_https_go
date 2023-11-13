@@ -13,6 +13,7 @@ import (
 func main() {
 	// Handle cli arguments
 	host := flag.String("h", "", "Fully-qualified domain name to check.")
+	checkString := flag.String("s", "<!DOCTYPE HTML>", "Custom string to check for in the response body.")
 	userAgent := flag.String("u", "check_https_go", "Custom user-agent string.")
 	verbose := flag.Bool("v", false, "More verbose output includes details of any redirects.")
 	redirects := flag.Int("r", 20, "Number of redirects to follow.")
@@ -59,7 +60,7 @@ func main() {
 	}
 
 	// Perform content check, exit with additional info if error
-	contentResult := h.CheckContent()
+	contentResult := h.CheckContent(*checkString)
 	if contentResult.Error != nil {
 		printIntro("Web Content Error", h.URL)
 		fmt.Println(statuscodeResult.Error)
