@@ -52,7 +52,8 @@ usage:
 ```
 
 ## Version history
-1.2—Follow Redirect feature now handles 307s
+1.3—Add custom string to check the content returned by the page.
+1.2—Follow Redirect feature now handles 307s.
 1.1—Added configurable timeout. Default remains at 30, but you can now increase or decrease this.
 
 ## License
