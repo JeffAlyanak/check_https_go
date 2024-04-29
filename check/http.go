@@ -49,11 +49,31 @@ func (p *PerfData) Get() string {
 	return p.String + "checks_took" + "=" + durationstr + "ms"
 }
 
+// parseStatusCodes takes a comma-seperated string of HTTP status codes
+// parses and returns a slice of int as well as any errors.
+func parseStatusCodes(userStatusCodes string) ([]int, error) {
+	if userStatusCodes == "" {
+		return nil, nil
+	}
+
+	statusCodes := strings.Split(userStatusCodes, ",")
+	result := make([]int, len(statusCodes))
+	for i, code := range statusCodes {
+		status, err := strconv.Atoi(strings.TrimSpace(code))
+		if err != nil {
+			return nil, err
+		}
+		result[i] = status
+	}
+	return result, nil
+}
+
 // CheckStatus function runs a check of the HTTP status code and returns the result.
-func (h *HTTPCheck) CheckStatus(redirects int, userAgent string, timeoutduration int) Result {
+func (h *HTTPCheck) CheckStatus(redirects int, userAgent string, timeoutduration int, userStatusCodes string) Result {
 	var resp *http.Response
 	var r Result
 	var url string = "https://" + h.URL
+	var statusCodes = []int{200, 201, 202, 203, 204, 205, 206, 207, 208, 226}
 
 	// Create request for domain with a User-Agent header.
 	tr := &http.Transport{}
@@ -69,8 +89,12 @@ func (h *HTTPCheck) CheckStatus(redirects int, userAgent string, timeoutduration
 	// Follow redirects up to redirect limit
 	for i := 0; i < redirects; i++ {
 		req, err := http.NewRequest("GET", url, nil)
-		req.Header.Set("User-Agent", userAgent)
+		if err != nil {
+			r.Error = err
+			return r
+		}
 
+		req.Header.Set("User-Agent", userAgent)
 		resp, err = client.Do(req)
 		if err != nil {
 			r.Error = err
@@ -111,8 +135,25 @@ func (h *HTTPCheck) CheckStatus(redirects int, userAgent string, timeoutduration
 	r.Status = resp.StatusCode
 	r.Value = http.StatusText(resp.StatusCode)
 
+	if userStatusCodes != "" {
+		parsedStatusCodes, err := parseStatusCodes(userStatusCodes)
+		if err != nil {
+			r.Error = err
+			return r
+		}
+		statusCodes = parsedStatusCodes
+	}
+
+	statusCodeGood := false
+	for _, code := range statusCodes {
+		if code == r.Status {
+			statusCodeGood = true
+			break
+		}
+	}
+
 	// Return code is 0 (OK) for any 2xx status code.
-	if r.Status >= 200 && r.Status < 300 {
+	if statusCodeGood {
 		r.ReturnCode = 0
 
 	} else {

@@ -4,7 +4,7 @@
 
 # Golang Icinga/Nagios HTTPS Checker
 
-Icinga/Nagios plugin, checks that a site returns a 2xx-series `status code`, `returns content`, and has a `valid certificate`.
+Icinga/Nagios plugin, checks that a site returns an `expected status code`, `returns expected content`, and has a `valid certificate`.
 
 User configurable `warning` and `critical` levels for the number of days left in the certificate validity period.
 
@@ -36,6 +36,8 @@ usage:
     -h string
         Fully-qualified domain name to check.
   optional
+    -a string
+        Comma-seperated list of status codes. (default "200,201,202,203,204,205,206,207,208,226")
     -c int
             Number of days for which the TLS certificate must be valid before a critical state is returned. (default 5)
     -r int
@@ -52,6 +54,8 @@ usage:
 ```
 
 ## Version history
+
+1.4—Add parameter for configuring status code check.
 1.3—Add custom string to check the content returned by the page.
 1.2—Follow Redirect feature now handles 307s.
 1.1—Added configurable timeout. Default remains at 30, but you can now increase or decrease this.
